@@ -59,9 +59,8 @@ def wait_for_stop():
     _mouse_listener.stop()
 
 
-
 def setup(key_queue, mouse_queue, stop_signal):
-    global _queue, _keyboard_listener, _stop_signal, _mouse_listener
+    global _key_queue, _mouse_queue, _keyboard_listener, _stop_signal, _mouse_listener
     _key_queue = key_queue
     _mouse_queue = mouse_queue
     _stop_signal = stop_signal

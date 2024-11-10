@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 import pickle
 import re
 import threading
@@ -140,18 +141,22 @@ def handle_inputs(inputs: str):
             pos = pyautogui.position()
             _pos_config["deg"] = (pos.x, pos.y)
             save_config()
+            _gui_queue.put("角度位置已设定。")
         elif inputs == "w":
             pos = pyautogui.position()
             _pos_config["wind"] = (pos.x, pos.y)
             save_config()
+            _gui_queue.put("风力位置已设定。")
         elif inputs == "l":
             pos = pyautogui.position()
             border = _map_info["view_box"]
             _map_info["view_box"] = (pos.x, border[1])
+            _gui_queue.put("屏距框左位置已设定。")
         elif inputs == "r":
             pos = pyautogui.position()
             border = _map_info["view_box"]
             _map_info["view_box"] = (border[0], pos.x)
+            _gui_queue.put("屏距框右位置已设定。")
         elif inputs == "a":
             # Puts something to trigger aiming.
             _mouse_queue.put("aiming")
@@ -207,17 +212,19 @@ def append_text(text):
 
 
 def load_config():
-    global _config
+    global _pos_config
+    if not Path("config.dict").exists():
+        save_config()
     with open("config.dict", "r") as f:
         try:
-            _config = pickle.load(f)
+            _pos_config = pickle.load(f)
         except:
-            _config = _DEFAULT_POS_CONFIG
+            _pos_config = _DEFAULT_POS_CONFIG
 
 
 def save_config():
-    with open("config.dict", "w") as f:
-        pickle.dump(_config, f)
+    with open("config.dict", "wb") as f:
+        pickle.dump(_pos_config, f)
 
 
 def run():
